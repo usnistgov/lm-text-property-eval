@@ -18,6 +18,7 @@ DATA = "data/Biology2e-WEB-sample.json"
 RUBRIC = "rubric.json"
 RESULTS = "results.json"
 PROPERTY = "midocondria involvement"
+PROPERTY = "How grounded is the question 'Which hormone is identified as a strong antagonist of gibberellins, and how does this antagonism likely influence gibberellins' role in gender expression?' in the provided text?"
 SEED = 42
 NUM_SAMPLES = 10
 
