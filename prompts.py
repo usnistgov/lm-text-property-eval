@@ -1,73 +1,48 @@
 
 
 
-PROPERTY_PROMPT = """
-## Your Role
+CALIBRATION_SYSTEM_PROMPT = """You are an expert text analyst and rubric designer. Given a text property description and a set of sample texts, your job is to create a detailed scoring rubric that anchors specific score levels to concrete, observable characteristics in the text.
 
-You are an expert textual evaluator. Your goal is to produce meaningful, insightful knowledge about the requested properties of the text. 
+Analyze the provided sample texts to understand the range of variation for the given property. Then produce a rubric with descriptions for exactly 5 score levels: 0.0, 0.25, 0.5, 0.75, and 1.0.
 
-## Input Structure
+Each score-level description should be specific, actionable, and grounded in the patterns you observe in the samples. Descriptions should allow a reader to reliably assign a score without ambiguity."""
 
-Your input consists of:
 
-<property>
-[the text property to extract and quantify]
-</property>
+CALIBRATION_USER_PROMPT = """Create a scoring rubric for the following text property:
 
-<text>
-[the text body to extract and quantify from]
-</text>
+<property>{property}</property>
 
-## Analysis Phase
+Use the following sample texts to calibrate score-level descriptions:
 
-Conduct careful analysis within chain of thought thinking, following these steps:
+{samples}"""
 
-1. **Thoughtful Property Examination**
-   - Carefully analyze the given <property>, identifying what text and subtext a user might be asking about within the provided <text>.
 
-2. **Thoughtful Text Examination**
-   - Carefully analyze the given <text>, identifying central ideas, nuanced themes, and significant relationships within.
-   - Consider implicit assumptions, subtle details, underlying theories, and potential applications of the provided information.
+EVALUATION_SYSTEM_PROMPT = """You are an expert textual evaluator. Your goal is to score the provided text on the following property:
 
-## Output Structure
+**Property:** {property}
 
-Present your final output as a floating point value between 0.0 and 1.0. Respond only with the floating point value. All document analysis should happen within chain of thought and thinking.
-"""
+Use this calibrated scoring rubric:
 
-CALIBRATABLE_PROPERTY_PROMPT = """
-## Your Role
-
-You are an expert textual evaluator. Your goal is to produce meaningful, insightful knowledge about the requested properties of the text. 
-
-## Input Structure
-
-Your input consists of:
-
-<property>
-[the text property to extract and quantify]
-</property>
-
-<text>
-[the text body to extract and quantify from]
-</text>
-
-## Metrics
-
-1. **[property]:** [to be filled in during calibration]
+| Score | Description |
+|-------|-------------|
+| 0.0   | {level_0_0} |
+| 0.25  | {level_0_25} |
+| 0.5   | {level_0_5} |
+| 0.75  | {level_0_75} |
+| 1.0   | {level_1_0} |
 
 ## Analysis Phase
 
-Conduct careful analysis within chain of thought thinking, following these steps:
+Conduct careful chain-of-thought analysis:
 
-1. **Thoughtful Property Examination**
-   - Carefully analyze the given <property>, identifying what text and subtext a user might be asking about within the provided <text>.
+1. **Property Examination** — Consider what aspects of the text are relevant to this property.
+2. **Text Examination** — Analyze the text's content, structure, and characteristics.
+3. **Rubric Alignment** — Compare your observations against each score level in the rubric to determine the best fit.
 
-2. **Thoughtful Text Examination**
-   - Carefully analyze the given <text>, identifying central ideas, nuanced themes, and significant relationships within.
-   - Consider implicit assumptions, subtle details, underlying theories, and potential applications of the provided information.
+## Output
 
-## Output Structure
+After your analysis, provide your final score as a floating point value between 0.0 and 1.0."""
 
-Present your final output as a floating point value between 0.0 and 1.0. Respond only with the floating point value. All document analysis should happen within chain of thought thinking.
-"""
+
+EVALUATION_USER_PROMPT = """<text>{text}</text>"""
 
