@@ -2,6 +2,7 @@ import asyncio
 import json
 import random
 from datetime import datetime, timezone
+from pathlib import Path
 
 from pydantic import BaseModel
 
@@ -15,6 +16,15 @@ from prompts import (
 
 
 def load_data(path):
+    path = Path(path)
+    if path.is_dir():
+        data = []
+        for file in sorted(path.iterdir()):
+            if file.is_file():
+                with open(file) as f:
+                    context = f.read()
+                data.append({"id": hash(context), "context": context})
+        return data
     with open(path) as f:
         return json.load(f)
 
@@ -103,7 +113,7 @@ class PropertyEvaluator:
         print(f"[{counter[0]}/{n}] id={item['id']} score={score}")
         return idx, {"id": item["id"], "score": score}
 
-    async def evaluate(self, rubric_path, data_path, output_path, max_concurrency=10):
+    async def evaluate(self, rubric_path, data_path, output_path, max_concurrency=10, keep_context=True):
         rubric = load_rubric(rubric_path)
         data = load_data(data_path)
 
@@ -133,6 +143,11 @@ class PropertyEvaluator:
 
         for idx, result in await asyncio.gather(*tasks):
             results[idx] = result
+
+        if not keep_context:
+            for val in results:
+                if 'context' in val:
+                    del val['context']
 
         save_json(results, output_path)
         return results
