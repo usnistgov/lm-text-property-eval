@@ -1,8 +1,11 @@
 import os
 from typing import Type
 
+from dotenv import load_dotenv
 from openai import AsyncOpenAI
 from pydantic import BaseModel
+
+load_dotenv()  # load environment variables from .env file
 
 
 class LMClient:
@@ -10,9 +13,11 @@ class LMClient:
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
+        effective_base_url = base_url or os.getenv("LM_MODEL_BASE_URL") or os.getenv("OPENAI_BASE_URL")
+        effective_api_key = api_key or os.getenv("LM_MODEL_API_KEY") or os.getenv("OPENAI_API_KEY")
         self.client = AsyncOpenAI(
-            base_url=base_url,
-            api_key=api_key,
+            base_url=effective_base_url,
+            api_key=effective_api_key,
         )
 
     async def generate(self, system_prompt, user_prompt, response_format: Type[BaseModel] = None):

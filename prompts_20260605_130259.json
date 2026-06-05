@@ -1,0 +1,12 @@
+[
+  "Using the two chunks below \u2013 \"This is a test chunk about actin filaments.\" and \"Another chunk discussing the role of myosin in cytokinesis.\" \u2013 evaluate how well\u2011grounded the question \"How grounded is this question?\" is in relation to the provided information. Explain your reasoning.",
+  "You are a peer reviewer for a biology manuscript. Given the excerpts: \"This is a test chunk about actin filaments.\" and \"Another chunk discussing the role of myosin in cytokinesis.\", assess whether the query \"How grounded is this question?\" is sufficiently anchored in the scientific context. Provide a concise critique.",
+  "Example:\nQ: \"What is the function of actin filaments in cell motility?\" \u2013 This is well\u2011grounded because it directly relates to the actin filament chunk.\nNow evaluate the grounding of the following question using the same chunks: \"How grounded is this question?\"",
+  "Refer only to the information in the chunks provided (actin filaments and myosin in cytokinesis). In two sentences or fewer, state whether the question \"How grounded is this question?\" is appropriately supported by that content.",
+  "On a scale of 1 (not grounded) to 5 (fully grounded), rate the grounding of the question \"How grounded is this question?\" based on the two chunks about actin filaments and myosin in cytokinesis, and justify the rating in one sentence.",
+  "Rewrite the question \"How grounded is this question?\" so that it becomes explicitly grounded in the topics of actin filaments and myosin\u2019s role in cytokinesis, using the provided chunks as the basis.",
+  "Identify any gaps in context that make the question \"How grounded is this question?\" unclear, and point to specific details from the actin filament and myosin cytokinesis chunks that could be used to improve its grounding.",
+  "Compare the grounding of \"How grounded is this question?\" to a typical well\u2011grounded biology question that directly references actin or myosin. Use the two provided chunks to illustrate any deficiencies.",
+  "Considering the content of the chunks \u2013 actin filaments and myosin in cytokinesis \u2013 list the pieces of information that are missing for the question \"How grounded is this question?\" to be answerable, and suggest how to incorporate them.",
+  "Provide a brief (max 3 sentences) justification for whether the question \"How grounded is this question?\" is adequately supported by the supplied chunks on actin filaments and myosin during cytokinesis."
+]

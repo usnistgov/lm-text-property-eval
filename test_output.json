@@ -1,0 +1,50 @@
+{
+  "query": "How grounded is this question?",
+  "chunk": "This is a test chunk about actin filaments.\n\n\n---\n\nAnother chunk discussing the role of myosin in cytokinesis.\n",
+  "selected_prompt": "What is the role of actin filaments in cytokinesis? Please explain in detail.",
+  "selected_response": "Mock response to: What is the role of actin filaments in cytokinesis...",
+  "selected_prompt_score": {
+    "relevance": 2,
+    "accuracy": 2,
+    "completeness": 2,
+    "clarity": 2,
+    "total": 8,
+    "label": "high"
+  },
+  "all_prompts": [
+    "What is the role of actin filaments in cytokinesis? Please explain in detail.",
+    "Describe how actin filaments contribute to the process of cytokinesis.",
+    "Actin filaments are crucial for cytokinesis; explain their function."
+  ],
+  "all_responses": [
+    "Mock response to: What is the role of actin filaments in cytokinesis...",
+    "Mock response to: Describe how actin filaments contribute to the pro...",
+    "Mock response to: Actin filaments are crucial for cytokinesis; expla..."
+  ],
+  "all_scores": [
+    {
+      "relevance": 2,
+      "accuracy": 2,
+      "completeness": 2,
+      "clarity": 2,
+      "total": 8,
+      "label": "high"
+    },
+    {
+      "relevance": 1,
+      "accuracy": 1,
+      "completeness": 1,
+      "clarity": 1,
+      "total": 4,
+      "label": "medium"
+    },
+    {
+      "relevance": 0,
+      "accuracy": 0,
+      "completeness": 0,
+      "clarity": 0,
+      "total": 0,
+      "label": "low"
+    }
+  ]
+}

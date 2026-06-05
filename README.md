@@ -1,18 +1,19 @@
-# LM Text Property Evaluator
+# PromptForge Studio
 
-A calibrated LM-as-judge framework for scoring arbitrary text properties. Instead of asking a language model to score text with no frame of reference, this tool first **calibrates** a scoring rubric from sample texts, then **evaluates** every text chunk against that anchored rubric. This produces scores that are meaningful, consistent, and auditable.
+A calibrated LM-as-judge framework for scoring arbitrary text properties and optimizing prompts. The tool first calibrates a scoring rubric from sample texts for reliable evaluation, then evaluates text chunks against that rubric. Additionally, it provides automated prompt generation and scoring (autoprompt) to discover high-performing prompt variations for any query, optionally using source chunks for context.
 
 ## How It Works
 
-The evaluation pipeline has two phases:
+PromptForge Studio offers three main capabilities:
 
 ### 1. Calibrate
-
 The LLM examines a random sample of your text chunks and generates a detailed scoring rubric with concrete descriptions for five score levels (0.0, 0.25, 0.5, 0.75, 1.0). This rubric is grounded in the actual content, so score levels reflect real variation in your data rather than abstract definitions.
 
 ### 2. Evaluate
-
 Each text chunk is scored against the calibrated rubric. The LLM receives the rubric as a system prompt and returns a structured score via constrained decoding (Pydantic `response_format`), guaranteeing a valid float every time. Evaluation runs asynchronously with up to 10 concurrent API calls.
+
+### 3. Autoprompt (Prompt Optimization)
+Given a query and optional source chunks, the tool automatically generates multiple prompt variations, scores them (either by prompt quality or by the quality of responses they elicit), and returns the best-performing prompt. This enables discovering high-performing prompts without manual trial-and-error.
 
 ## Setup
 
@@ -44,7 +45,7 @@ uv pip install docling
 Create a `.env` file (or export directly) with your API key:
 
 ```
-OPENAI_API_KEY=sk-...
+LM_MODEL_API_KEY=sk-...
 ```
 
 Set the target OpenAI-compatible endpoints (**This must be set**).:
@@ -52,28 +53,32 @@ Set the target OpenAI-compatible endpoints (**This must be set**).:
 
 If you are pointing to OpenAI models:
 ```
-OPENAI_BASE_URL=https://api.openai.com/v1
+LM_MODEL_BASE_URL=https://api.openai.com/v1
 ```
 
 If you are self-hosting, you need to specify the chat completions endpoint.
 
 ```
-OPENAI_BASE_URL=https://your-server.example.com/v1
+LM_MODEL_BASE_URL=https://your-server.example.com/v1
 ```
+
+LM_MODEL=openai/gpt-oss-120b
 
 ## Project Structure
 
 ```
 .
 ├── model_interface.py       # Async OpenAI-compatible LLM client
-├── prompts.py               # Prompt templates for calibration and evaluation
+├── prompts.py               # Prompt templates for calibration, evaluation, and auto-prompting
 ├── property_evaluator.py    # Core PropertyEvaluator class (calibrate + evaluate)
 ├── cli.py                   # Command-line interface
+├── auto_prompt.py           # Automatic prompt generation and scoring
+├── prompt_generator.py      # Prompt generation utilities
+├── prompt_evaluator.py      # Prompt and response evaluation utilities
 ├── data_pdf_chunking.py     # PDF/Markdown to chunked JSON converter
-├── example.py               # End-to-end example script
-├── subset_for_example.py    # Helper to create a small sample dataset
 └── data/
-    └── Biology2e-WEB.json   # Example dataset (OpenStax Biology 2e)
+    ├── Biology2e-WEB.json   # Example dataset (OpenStax Biology 2e)
+    └── chunks/              # Example chunk files (chunk1.txt, chunk2.txt)
 ```
 
 ## Data Format
@@ -105,7 +110,7 @@ convert_file("document.md", "output.json")
 
 ### CLI
 
-The CLI has two subcommands: `calibrate` and `evaluate`.
+The CLI has three subcommands: `calibrate`, `evaluate`, and `autoprompt`.
 
 #### Calibrate a rubric
 
@@ -144,6 +149,41 @@ python cli.py --model gpt-4o evaluate \
 | `--rubric` | Yes | Path to a calibrated rubric JSON |
 | `--data` | Yes | Path to input data JSON |
 | `--output` | Yes | Path to save results JSON |
+
+#### Autoprompt: Generate and score prompt variations
+
+The autoprompt feature automatically generates multiple prompt variations for a given query, scores them (based on prompt quality or response quality), and returns the best-performing prompt. It can optionally use source chunks to inform prompt generation and evaluation.
+
+```shell
+python cli.py --model gpt-4o autoprompt \
+  --query "Your question or instruction" \
+  --evaluate-responses \
+  --temperature 0.9 \
+  --num-variants 8 \
+  --chunk-files data/chunks/chunk1.txt \
+  --chunk-files data/chunks/chunk2.txt \
+  --output autoprompt_result.json \
+  --save-prompts all_prompts_$(Get-Date -Format "yyyyMMdd_HHmmss").json
+```
+
+**Output:** The result JSON includes the selected prompt, its score, and (if requested) all generated prompts, responses, and scores.
+
+**Arguments:**
+
+| Argument | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `--query` | Yes | | User query or instruction for which to generate prompts. |
+| `--chunk` | No | | Optional source chunk to consider when generating prompts. |
+| `--chunk-file` | No | None | Path to a file containing the chunk; overrides `--chunk` if provided. |
+| `--chunk-files` | No | [] | Path to a source-chunk file. Can be given multiple times to supply N chunks. |
+| `--chunk-dir` | No | None | If set, all `*.txt` (or `*.json`) files under this directory are read as chunks. |
+| `--num-variants` | No | 5 | How many prompt variants to generate. |
+| `--evaluate-responses` | No | | Evaluate prompts based on response quality instead of prompt quality. |
+| `--output` | No | None | If set, write the result JSON to this file. |
+| `--save-prompts-path` | No | None | If set, write all generated prompt variants to this file (JSON array of strings). |
+| `--mock` | No | | Use a mock LLM client (no external calls). |
+
+**Note:** The `--evaluate-responses` flag changes the evaluation metric from prompt quality (relevance, clarity, faithfulness, conciseness) to response quality (relevance, accuracy, completeness, clarity) by generating responses from each prompt and scoring them.
 
 #### Global arguments
 
@@ -237,13 +277,36 @@ Scores are floats clamped to [0.0, 1.0].
 ## Example: Biology 2e
 
 The included dataset is from the OpenStax Biology 2e textbook, chunked into ~1200 sections.
+We also provide two example chunk files in `data/chunks/` for demonstration.
 
 Citation: Mary Ann Clark, Matthew Douglas, and Jung Choi. *Biology 2e*. OpenStax, 2018.
 
-```shell
-# Create a small sample for testing
-python subset_for_example.py
+### Using the autoprompt feature (PowerShell example)
 
-# Run the full pipeline
-python example.py
+```powershell
+python cli.py autoprompt `
+  --model gpt-oss-120b `
+  --query "What is the role of actin filaments in cytokinesis?" `
+  --evaluate-responses `
+  --temperature 0.9 `
+  --num-variants 8 `
+  --chunk-files data\chunks\chunk1.txt `
+  --chunk-files data\chunks\chunk2.txt `
+  --output autoprompt_result.json `
+  --save-prompts ("prompts_{0}.json" -f (Get-Date -Format "yyyyMMdd_HHmmss"))
+```
+
+**Note for Unix shells (bash, zsh):** Use `\` for line continuation and `$(date +%Y%m%d_%H%M%S)` for the timestamp, e.g.:
+
+```bash
+python cli.py autoprompt \
+  --model gpt-oss-120b \
+  --query "What is the role of actin filaments in cytokinesis?" \
+  --evaluate-responses \
+  --temperature 0.9 \
+  --num-variants 8 \
+  --chunk-files data/chunks/chunk1.txt \
+  --chunk-files data/chunks/chunk2.txt \
+  --output autoprompt_result.json \
+  --save-prompts "prompts_$(date +%Y%m%d_%H%M%S).json"
 ```
