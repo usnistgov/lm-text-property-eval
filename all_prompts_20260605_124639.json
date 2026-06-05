@@ -1,7 +1,0 @@
-[
-  "Using only the two provided chunks (one about actin filaments and one about myosin in cytokinesis), assess how well\u2011grounded the question \"How grounded is this question?\" is. Explain whether the chunks contain sufficient context to answer it.",
-  "You are a scientific reviewer. Based on the excerpt describing actin filaments and the excerpt describing myosin\u2019s role in cytokinesis, determine whether the question \"How grounded is this question?\" is properly supported by the given material, and justify your judgment.",
-  "Example:\nQ: \"What is the role of actin filaments in cells?\"\nA: The first chunk explains that actin filaments form part of the cytoskeleton and are involved in cell shape and movement.\n\nNow, using the same two chunks, evaluate the grounding of the question \"How grounded is this question?\".",
-  "In one concise sentence, state whether the question \"How grounded is this question?\" can be answered with the information from the actin\u2011filament chunk, the myosin\u2011cytokinesis chunk, both, or neither, and briefly note why.",
-  "Discuss the extent to which the question \"How grounded is this question?\" can be meaningfully addressed given the content of the two supplied excerpts about actin filaments and myosin during cytokinesis."
-]

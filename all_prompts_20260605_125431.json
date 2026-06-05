@@ -1,7 +1,0 @@
-[
-  "Using the two excerpts below \u2014 one about actin filaments and one about myosin in cytokinesis \u2014 assess how well the question \"How grounded is this question?\" is supported by the information in those passages. Explain your reasoning clearly.",
-  "You are a scientific reviewer tasked with judging the relevance of questions to source material. Based on the provided texts on actin filaments and myosin's role in cytokinesis, determine whether the question \"How grounded is this question?\" is appropriately grounded in the content. Provide a concise justification.",
-  "Example:\nQ: \"What is the function of actin filaments in cell movement?\" \u2013 Grounded: Yes \u2013 Reason: The passage explicitly describes actin\u2019s role in motility.\n\nNow evaluate the question \"How grounded is this question?\" using the following two chunks about actin filaments and myosin in cytokinesis. Indicate if it is grounded and give a brief explanation.",
-  "Answer in three sentences or fewer, using only the information from the two provided chunks (actin filaments and myosin in cytokinesis), whether the question \"How grounded is this question?\" is grounded in that material. State your conclusion and the key reason.",
-  "Discuss the extent to which the question \"How grounded is this question?\" aligns with the topics covered in the supplied excerpts on actin filaments and myosin during cytokinesis. Mention any gaps or assumptions you must make to evaluate its grounding."
-]

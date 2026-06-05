@@ -1,7 +1,0 @@
-[
-  "Using the two provided excerpts\u2014one about actin filaments and another about myosin\u2019s role in cytokinesis\u2014evaluate how well\u2011grounded the question \"How grounded is this question?\" is. Explain whether the question is supported by the information in the chunks and why.",
-  "You are a scientific editor reviewing a manuscript. Given the test chunk on actin filaments and the chunk on myosin in cytokinesis, assess the grounding of the query \"How grounded is this question?\". Provide a concise critique of its relevance and specificity based on the supplied material.",
-  "Example:\nQ: \"Does actin polymerization affect cell shape?\" \u2013 A: \"The actin filament chunk indicates that actin polymerization contributes to cell morphology, so the question is well\u2011grounded.\"\nNow, using the same style and only the two chunks provided, determine how grounded the question \"How grounded is this question?\" is.",
-  "Answer in no more than three sentences, drawing exclusively from the actin filament chunk and the myosin cytokinesis chunk, to decide whether the question \"How grounded is this question?\" is appropriately supported by the given information.",
-  "Discuss the degree to which the question \"How grounded is this question?\" can be answered with the supplied information about actin filaments and myosin during cytokinesis. Identify any gaps and suggest how the question could be rephrased to be more firmly grounded."
-]
